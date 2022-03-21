@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using WebApplication1.Data.Models;
+using Speditor.Data.Models;
 
-namespace WebApplication1.Data
+namespace Speditor.Data
 {
     public class SpeditorDbContext : IdentityDbContext
     {
@@ -13,9 +13,12 @@ namespace WebApplication1.Data
             : base(options)
         {
         }
-
-        public DbSet<Freight> Freights { get; init; }
-        public DbSet<Sender> Senders { get; init; }
+        public DbSet<Carrier> Carriers { get; init; }
+        public DbSet<Cargo> Cargoes { get; init; }
+        public DbSet<FreightAd> Freights { get; init; }
+        public DbSet<GoodsOwner> Senders { get; init; }
         public DbSet<Receiver> Receivers { get; init; }
+        public DbSet<CargoSpaceDimension> CargoSpaceDimensions { get; init; }
+        public DbSet<CargoSpaceType> CargoSpaceTypes { get; init; }
     }
 }

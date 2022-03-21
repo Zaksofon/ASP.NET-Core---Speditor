@@ -5,9 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using WebApplication1.Data;
+using Speditor.Data;
+using Speditor.Infrasrtucture;
 
-namespace WebApplication1
+namespace Speditor
 {
     public class Startup
     {
@@ -32,6 +33,8 @@ namespace WebApplication1
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.PrepareDatabase();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -53,6 +56,7 @@ namespace WebApplication1
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapRazorPages();
             });
+
         }
     }
 }

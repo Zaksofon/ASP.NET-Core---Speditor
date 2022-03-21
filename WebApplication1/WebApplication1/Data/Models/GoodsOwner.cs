@@ -2,7 +2,7 @@
 
 namespace Speditor.Data.Models
 {
-    public class Receiver
+    public class GoodsOwner
     {
         public int Id { get; init; }
 

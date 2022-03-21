@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WebApplication1.Data;
+using Speditor.Data;
 
-namespace WebApplication1.Data.Migrations
+namespace Speditor.Data.Migrations
 {
     [DbContext(typeof(SpeditorDbContext))]
-    [Migration("20220320125759_FreightRecieverSenderTables")]
-    partial class FreightRecieverSenderTables
+    partial class SpeditorDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -221,15 +219,27 @@ namespace WebApplication1.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("WebApplication1.Data.Models.Freight", b =>
+            modelBuilder.Entity("Speditor.Data.Models.Cargo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("CargoSpaceDimensionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CargoSpaceTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("DangerousLoad")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("DeliveryDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<decimal>("FreightPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("LoadingDate")
                         .HasColumnType("datetime2");
@@ -239,25 +249,53 @@ namespace WebApplication1.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("ReceiverId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SenderId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Weight")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReceiverId");
+                    b.HasIndex("CargoSpaceDimensionId");
 
-                    b.HasIndex("SenderId");
+                    b.HasIndex("CargoSpaceTypeId");
 
-                    b.ToTable("Freights");
+                    b.ToTable("Cargoes");
                 });
 
-            modelBuilder.Entity("WebApplication1.Data.Models.Receiver", b =>
+            modelBuilder.Entity("Speditor.Data.Models.CargoSpaceDimension", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CargoSpaceDimensions");
+                });
+
+            modelBuilder.Entity("Speditor.Data.Models.CargoSpaceType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CargoSpaceTypes");
+                });
+
+            modelBuilder.Entity("Speditor.Data.Models.Carrier", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -294,10 +332,46 @@ namespace WebApplication1.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Receivers");
+                    b.ToTable("Carriers");
                 });
 
-            modelBuilder.Entity("WebApplication1.Data.Models.Sender", b =>
+            modelBuilder.Entity("Speditor.Data.Models.FreightAd", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CargoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CarrierId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<int>("GoodsOwnerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReceiverId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CargoId");
+
+                    b.HasIndex("CarrierId");
+
+                    b.HasIndex("GoodsOwnerId");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.ToTable("Freights");
+                });
+
+            modelBuilder.Entity("Speditor.Data.Models.GoodsOwner", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -335,6 +409,46 @@ namespace WebApplication1.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Senders");
+                });
+
+            modelBuilder.Entity("Speditor.Data.Models.Receiver", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("BankAccount")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompanyName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Receivers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -388,23 +502,58 @@ namespace WebApplication1.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WebApplication1.Data.Models.Freight", b =>
+            modelBuilder.Entity("Speditor.Data.Models.Cargo", b =>
                 {
-                    b.HasOne("WebApplication1.Data.Models.Receiver", "Receiver")
+                    b.HasOne("Speditor.Data.Models.CargoSpaceDimension", "CargoSpaceDimension")
+                        .WithMany()
+                        .HasForeignKey("CargoSpaceDimensionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Speditor.Data.Models.CargoSpaceType", "CargoSpaceType")
+                        .WithMany()
+                        .HasForeignKey("CargoSpaceTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CargoSpaceDimension");
+
+                    b.Navigation("CargoSpaceType");
+                });
+
+            modelBuilder.Entity("Speditor.Data.Models.FreightAd", b =>
+                {
+                    b.HasOne("Speditor.Data.Models.Cargo", "Cargo")
+                        .WithMany()
+                        .HasForeignKey("CargoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Speditor.Data.Models.Carrier", "Carrier")
+                        .WithMany()
+                        .HasForeignKey("CarrierId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Speditor.Data.Models.GoodsOwner", "GoodsOwner")
+                        .WithMany()
+                        .HasForeignKey("GoodsOwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Speditor.Data.Models.Receiver", "Receiver")
                         .WithMany()
                         .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WebApplication1.Data.Models.Sender", "Sender")
-                        .WithMany()
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Cargo");
+
+                    b.Navigation("Carrier");
+
+                    b.Navigation("GoodsOwner");
 
                     b.Navigation("Receiver");
-
-                    b.Navigation("Sender");
                 });
 #pragma warning restore 612, 618
         }

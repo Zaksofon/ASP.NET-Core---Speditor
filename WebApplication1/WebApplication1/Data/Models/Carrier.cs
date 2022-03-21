@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApplication1.Data.Models
+namespace Speditor.Data.Models
 {
-    public class Sender
+    public class Carrier
     {
         public int Id { get; init; }
 
